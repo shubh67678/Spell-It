@@ -5,6 +5,7 @@ import 'not_used/test_to_voice.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'loadJsonData.dart';
 
 var words = ["test", "best", "next", "happy"];
 var answers = ['', '', '', '', '', ''];
@@ -23,12 +24,141 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MyHomePage(title: 'Dictation App'),
+        // home: MyHomePage(title: 'Dictation App'),
         // home: LoginDemo(),
+        home: StackDemo(),
         routes: {
           '/testpage': (_) => MyHomePage(title: 'title'),
           '/login': (_) => LoginDemo(),
         });
+  }
+}
+
+class LevelSelector extends StatelessWidget {
+  const LevelSelector({Key? key}) : super(key: key);
+  // width = MediaQuery.of(context).size.width;
+
+  @override
+  Widget build(BuildContext context) {
+    double height_of_device = MediaQuery.of(context).size.height;
+    var width_of_device = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: Text("Select level")),
+      body: Center(
+        child: Card(
+          child: InkWell(
+            splashColor: Colors.blue.withAlpha(30),
+            onTap: () {
+              print('Card tapped.');
+            },
+            child: const SizedBox(
+              width: 200,
+              height: 60,
+              child: Text('A card that can be tapped'),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+SetAnwerWrtLevel(String level) async {
+  var totalJson = await getTheJsonData();
+  words =
+      totalJson[level].cast<String>(); // convert list dynamic to list string
+  print(words);
+  // print(level);
+  // print(totalJson);
+  // print(totalJson["1"]);
+}
+
+class StackDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.blueAccent,
+      body: SafeArea(
+        child: Center(
+            child: ListView(children: <Widget>[
+          LevelCard(1),
+          LevelCard(2),
+          LevelCard(3),
+          LevelCard(4),
+          LevelCard(5),
+          LevelCard(6),
+          LevelCard(7),
+          LevelCard(8),
+        ])),
+      ),
+    );
+  }
+}
+
+class LevelCard extends StatelessWidget {
+  final int level_number;
+  LevelCard(this.level_number);
+  Future<Map<String, dynamic>> parseJsonFromAssets(String assetsPath) async {
+    print('--- Parse json from: $assetsPath');
+    return rootBundle
+        .loadString(assetsPath)
+        .then((jsonStr) => jsonDecode(jsonStr));
+  }
+
+  var path = "asset/data.json";
+  getTheJsonData() async {
+    Map<String, dynamic> dmap = await parseJsonFromAssets(path);
+    return dmap;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(16),
+      child: Card(
+        elevation: 12,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        color: Colors.white,
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {
+            print('Card tapped.');
+            SetAnwerWrtLevel(level_number.toString());
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        "Level " + level_number.toString(),
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.navigate_next,
+                  size: 36,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -81,7 +211,7 @@ class _LoginDemoState extends State<LoginDemo> {
                     decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(20)),
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/testpage');
                       },
@@ -150,35 +280,42 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          LoopOverWords2(_counter),
-          Text("test"),
-          TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-            ),
-            onPressed: calculateScore,
-            child: Text('Calculate Score'),
-          ),
-          Text(score.toString()),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
+      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        LoopOverWords2(_counter),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // ElevatedButton(
+            //   onPressed: decrementCounter,
+            //   child: Icon(Icons.arrow_back),
+            // ),
+            // ElevatedButton(
+            //   onPressed: incrementCounter,
+            //   child: Icon(Icons.arrow_forward),
+            // ),
+            Container(
+              height: 50,
+              width: 120,
+              decoration: BoxDecoration(
+                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+              child: ElevatedButton(
                 onPressed: decrementCounter,
                 child: Icon(Icons.arrow_back),
               ),
-              ElevatedButton(
+            ),
+            Container(
+              height: 50,
+              width: 120,
+              decoration: BoxDecoration(
+                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+              child: ElevatedButton(
                 onPressed: incrementCounter,
                 child: Icon(Icons.arrow_forward),
               ),
-            ],
-          )
-        ]),
-      ),
+            ),
+          ],
+        )
+      ]),
 
       // This trailing comma makes auto-formatting nicer for build methods.
     );
@@ -197,15 +334,15 @@ class LoopOverWords2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      // Center is a layout widget. It takes a single child and positions it
-      // in the middle of the parent.
-      child: Column(
-        children: <Widget>[
-          SpeakTheWordButton(getWord()),
-          GetUserAnswerForWord(this.wordIndex % modOperator),
-        ],
-      ),
+    return
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        SpeakTheWordButton(getWord()),
+        GetUserAnswerForWord(this.wordIndex % modOperator),
+      ],
     );
   }
 }
@@ -227,22 +364,30 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
     return Container(
       child: Column(
         children: [
-          TextField(
-              controller: controlerOfTheAnsField,
-              keyboardType: TextInputType.visiblePassword,
-              // decoration: const InputDecoration(
-              //   hintText: 'Type your answer here',
-              // ),
-              onChanged: (String str) {
-                setState(() {
-                  wordAnswer = str;
-                  answers[widget.wordIndex] = str;
-                  print(answers);
-                  print(controlerOfTheAnsField.text);
-                });
-              }),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: TextField(
+                controller: controlerOfTheAnsField,
+                keyboardType: TextInputType.visiblePassword,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Type your answer here',
+                ),
+                //     decoration: const InputDecoration(
+                //       border: OutlineInputBorder(),
+                //       labelText: 'Name',
+                //       hintText: 'Enter your full name'),
+                // ),
+                onChanged: (String str) {
+                  setState(() {
+                    wordAnswer = str;
+                    answers[widget.wordIndex] = str;
+                    print(answers);
+                    print(controlerOfTheAnsField.text);
+                  });
+                }),
+          ),
           Text(wordAnswer),
-          Text(widget.wordIndex.toString()),
         ],
       ),
     );
@@ -261,23 +406,26 @@ class SpeakTheWordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
           ElevatedButton(
             onPressed: () {
               speak(this.wordToSpeak);
             },
-            child: Icon(Icons.campaign),
+            child: Text(
+              "Speak",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+              ),
+            ),
             style: ButtonStyle(
               shape: MaterialStateProperty.all(CircleBorder()),
-              padding: MaterialStateProperty.all(EdgeInsets.all(20)),
+              padding: MaterialStateProperty.all(EdgeInsets.all(50)),
               backgroundColor:
                   MaterialStateProperty.all(Colors.blue), // <-- Button color
-              overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
-                if (states.contains(MaterialState.pressed))
-                  return Colors.red; // <-- Splash color
-              }),
             ),
           ),
           Text(this.wordToSpeak),
