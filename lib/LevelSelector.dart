@@ -44,7 +44,7 @@ SetAnwerWrtLevel(String level) async {
   var totalJson = await getTheJsonData();
   main.words =
       totalJson[level].cast<String>(); // convert list dynamic to list string
-  // print(words);
+  // print(main.words);
 }
 
 class StackDemo extends StatelessWidget {
@@ -99,6 +99,7 @@ class LevelCard extends StatelessWidget {
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             print('Card tapped.');
+            Navigator.pushNamed(context, '/dictation-test');
             SetAnwerWrtLevel(level_number.toString());
           },
           child: Padding(

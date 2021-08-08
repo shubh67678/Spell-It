@@ -1,14 +1,21 @@
 import 'dart:async';
 
+import 'constants.dart';
+
 import 'package:flutter/material.dart';
 import 'not_used/test_to_voice.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'loadJsonData.dart';
+import 'LevelSelector.dart';
+import 'package:flutter_svg/svg.dart';
+import 'Login.dart';
 
 var words = ["test", "best", "next", "happy"];
 var answers = ['', '', '', '', '', ''];
+int _counter = 0;
+var score = 0;
 final controlerOfTheAnsField = TextEditingController();
 
 void main() {
@@ -24,211 +31,74 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        // home: ScoreBoard(),
         // home: MyHomePage(title: 'Dictation App'),
-        // home: LoginDemo(),
-        home: StackDemo(),
+        home: LoginDemo(),
+        // home: StackDemo(),
         routes: {
-          '/testpage': (_) => MyHomePage(title: 'title'),
+          '/dictation-test': (_) => MyHomePage(title: 'title'),
           '/login': (_) => LoginDemo(),
+          '/score': (_) => ScoreBoard(),
+          '/levels': (_) => StackDemo(),
         });
   }
 }
 
-class LevelSelector extends StatelessWidget {
-  const LevelSelector({Key? key}) : super(key: key);
-  // width = MediaQuery.of(context).size.width;
+class ScoreBoard extends StatelessWidget {
+  const ScoreBoard({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    double height_of_device = MediaQuery.of(context).size.height;
-    var width_of_device = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Select level")),
-      body: Center(
-        child: Card(
-          child: InkWell(
-            splashColor: Colors.blue.withAlpha(30),
-            onTap: () {
-              print('Card tapped.');
-            },
-            child: const SizedBox(
-              width: 200,
-              height: 60,
-              child: Text('A card that can be tapped'),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-SetAnwerWrtLevel(String level) async {
-  var totalJson = await getTheJsonData();
-  words =
-      totalJson[level].cast<String>(); // convert list dynamic to list string
-  print(words);
-  // print(level);
-  // print(totalJson);
-  // print(totalJson["1"]);
-}
-
-class StackDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
-      body: SafeArea(
-        child: Center(
-            child: ListView(children: <Widget>[
-          LevelCard(1),
-          LevelCard(2),
-          LevelCard(3),
-          LevelCard(4),
-          LevelCard(5),
-          LevelCard(6),
-          LevelCard(7),
-          LevelCard(8),
-        ])),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
+          Column(
+            children: [
+              Spacer(flex: 3),
+              Text(
+                "Score",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline3
+                    ?.copyWith(color: kSecondaryColor),
+              ),
+              Spacer(),
+              Text(
+                "${score}/${_counter}",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    ?.copyWith(color: kSecondaryColor),
+              ),
+              Spacer(flex: 3),
+              Container(
+                height: 50,
+                width: 120,
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/levels');
+                  },
+                  child: Icon(Icons.arrow_back),
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
 }
 
-class LevelCard extends StatelessWidget {
-  final int level_number;
-  LevelCard(this.level_number);
-  Future<Map<String, dynamic>> parseJsonFromAssets(String assetsPath) async {
-    print('--- Parse json from: $assetsPath');
-    return rootBundle
-        .loadString(assetsPath)
-        .then((jsonStr) => jsonDecode(jsonStr));
-  }
-
-  var path = "asset/data.json";
-  getTheJsonData() async {
-    Map<String, dynamic> dmap = await parseJsonFromAssets(path);
-    return dmap;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(16),
-      child: Card(
-        elevation: 12,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        color: Colors.white,
-        child: InkWell(
-          splashColor: Colors.blue.withAlpha(30),
-          onTap: () {
-            print('Card tapped.');
-            SetAnwerWrtLevel(level_number.toString());
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "Level " + level_number.toString(),
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.navigate_next,
-                  size: 36,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LoginDemo extends StatefulWidget {
-  @override
-  _LoginDemoState createState() => _LoginDemoState();
-}
-
-class _LoginDemoState extends State<LoginDemo> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Login Page"),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Padding(
-                  // padding: const EdgeInsets.only(
-                  // left: 15.0, right: 15.0, top: 0, bottom: 0),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Name',
-                        hintText: 'Enter your full name'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15.0, right: 15.0, top: 15, bottom: 0),
-                  //padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Email',
-                        hintText: 'Enter your emailId'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 50,
-                    width: 250,
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/testpage');
-                      },
-                      child: Text(
-                        'Start the Game!',
-                        style: TextStyle(color: Colors.white, fontSize: 25),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+ResetDataOfApp() {
+  words = [];
+  answers = [];
+  _counter = 0;
+  score = 0;
 }
 
 class MyHomePage extends StatefulWidget {
@@ -239,10 +109,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  var modOperator = 3;
+  var modOperator = words.length;
 
-  int score = 0;
+  // int score = 0;
 
   incrementCounter() {
     setState(() {
@@ -262,7 +131,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   calculateScore() {
     score = 0;
-    for (int i = 0; i < 3; i++) {
+    var length_words = _counter;
+    if (length_words < score) {
+      length_words = _counter;
+    }
+    for (int i = 0; i < length_words; i++) {
       answers[i].toLowerCase();
       answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
 
@@ -314,7 +187,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ],
-        )
+        ),
+        ElevatedButton(
+          onPressed: () {
+            ResetDataOfApp();
+            Navigator.pushNamed(context, '/score');
+            print("ended");
+          },
+          child: Text("end"),
+        ),
       ]),
 
       // This trailing comma makes auto-formatting nicer for build methods.
@@ -324,7 +205,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class LoopOverWords2 extends StatelessWidget {
   final int wordIndex;
-  var modOperator = 3;
+  var modOperator = words.length;
   LoopOverWords2(this.wordIndex);
   getWord() {
     var finalWordIndex = this.wordIndex % modOperator;
