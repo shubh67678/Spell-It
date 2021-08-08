@@ -12,8 +12,8 @@ import 'LevelSelector.dart';
 import 'package:flutter_svg/svg.dart';
 import 'Login.dart';
 
-var words = ["test", "best", "next", "happy"];
-var answers = ['', '', '', '', '', ''];
+var words = [];
+var answers = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
 int _counter = 0;
 var score = 0;
 final controlerOfTheAnsField = TextEditingController();
@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
         ),
         // home: ScoreBoard(),
         // home: MyHomePage(title: 'Dictation App'),
-        home: LoginDemo(),
-        // home: StackDemo(),
+        // home: LevelSelector(),
+        home: StackDemo(),
         routes: {
           '/dictation-test': (_) => MyHomePage(title: 'title'),
           '/login': (_) => LoginDemo(),
@@ -44,8 +44,32 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ScoreBoard extends StatelessWidget {
-  const ScoreBoard({Key? key}) : super(key: key);
+class ScoreBoard extends StatefulWidget {
+  ScoreBoard({Key? key}) : super(key: key);
+
+  @override
+  _ScoreBoardState createState() => _ScoreBoardState();
+}
+
+class _ScoreBoardState extends State<ScoreBoard> {
+  calculateScore() {
+    score = 0;
+    var length_words = _counter;
+    if (length_words < score) {
+      length_words = _counter;
+    }
+    for (int i = 0; i < length_words + 1; i++) {
+      answers[i].toLowerCase();
+      answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
+      print(answers[i]);
+      print(words[i]);
+      if (answers[i] == words[i]) {
+        setState(() {
+          score++;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +90,7 @@ class ScoreBoard extends StatelessWidget {
               ),
               Spacer(),
               Text(
-                "${score}/${_counter}",
+                "${score}/${_counter + 1}",
                 style: Theme.of(context)
                     .textTheme
                     .headline4
@@ -81,11 +105,14 @@ class ScoreBoard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: ElevatedButton(
                   onPressed: () {
+                    ResetDataOfApp();
                     Navigator.pushNamed(context, '/levels');
                   },
                   child: Icon(Icons.arrow_back),
                 ),
               ),
+              ElevatedButton(
+                  onPressed: calculateScore, child: Text("show Score"))
             ],
           )
         ],
@@ -97,6 +124,7 @@ class ScoreBoard extends StatelessWidget {
 ResetDataOfApp() {
   words = [];
   answers = [];
+  answers = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
   _counter = 0;
   score = 0;
 }
@@ -129,24 +157,6 @@ class _MyHomePageState extends State<MyHomePage> {
     controlerOfTheAnsField.text = answers[_counter % modOperator];
   }
 
-  calculateScore() {
-    score = 0;
-    var length_words = _counter;
-    if (length_words < score) {
-      length_words = _counter;
-    }
-    for (int i = 0; i < length_words; i++) {
-      answers[i].toLowerCase();
-      answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
-
-      if (answers[i] == words[i]) {
-        setState(() {
-          score++;
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,14 +168,6 @@ class _MyHomePageState extends State<MyHomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // ElevatedButton(
-            //   onPressed: decrementCounter,
-            //   child: Icon(Icons.arrow_back),
-            // ),
-            // ElevatedButton(
-            //   onPressed: incrementCounter,
-            //   child: Icon(Icons.arrow_forward),
-            // ),
             Container(
               height: 50,
               width: 120,
@@ -190,7 +192,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () {
-            ResetDataOfApp();
             Navigator.pushNamed(context, '/score');
             print("ended");
           },
@@ -262,6 +263,9 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
                 onChanged: (String str) {
                   setState(() {
                     wordAnswer = str;
+                    if (answers.length < widget.wordIndex) {
+                      answers.add("");
+                    }
                     answers[widget.wordIndex] = str;
                     print(answers);
                     print(controlerOfTheAnsField.text);
