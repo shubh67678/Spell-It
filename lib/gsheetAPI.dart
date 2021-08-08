@@ -25,7 +25,8 @@ const _credentials = r'''
 /// [YOUR_SPREADSHEET_ID] in the path is the id your need
 const _spreadsheetId = '1y7HE2qk_pnm7aLc_KemhtvxDM7UCRdpXDmDUK1KFNiY';
 
-void insertPreDefinedData() async {
+void insertDataToExcel(inputData) async {
+  print("iinn");
   // init GSheets
   final gsheets = GSheets(_credentials);
   // fetch spreadsheet by its id
@@ -36,17 +37,17 @@ void insertPreDefinedData() async {
   sheet ??= await ss.addWorksheet('Users');
 
   // insert list in row #1
-  final firstRow = ['id', 'name', 'email'];
-  await sheet.values.insertRow(1, firstRow);
+  // final firstRow = ['id', 'name', 'email'];
+  // await sheet.values.insertRow(1, firstRow);
   // prints [index, letter, number, label]
-  print(await sheet.values.row(1));
+  // print(await sheet.values.row(1));
 
-  final secondRow = {
-    'name': 'Shubham Goel',
-    'id': '2',
-    'email': 'shubhamg@ads.com',
-  };
-  await sheet.values.map.appendRow(secondRow);
+  // final secondRow = {
+  //   'name': 'Shubham Goel',
+  //   'id': '2',
+  //   'email': 'shubhamg@ads.com',
+  // };
+  await sheet.values.map.appendRow(inputData);
   // prints {index: 5, letter: f, number: 6, label: f6}
-  print(await sheet.values.map.lastRow());
+  // print(await sheet.values.map.lastRow());
 }

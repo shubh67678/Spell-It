@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:myapp/LevelSelector.dart';
-import 'main.dart';
 
-import 'package:gsheets/gsheets.dart';
+import 'LevelSelector.dart';
+import 'main.dart';
+import 'gsheetAPI.dart' as gsheet;
 // import 'package:get/get.dart';
 
 class LoginDemo extends StatefulWidget {
@@ -13,6 +13,7 @@ class LoginDemo extends StatefulWidget {
 
 class _LoginDemoState extends State<LoginDemo> {
   final emailController = TextEditingController();
+  final nameController = TextEditingController();
   bool isValidEmail(var inputString) {
     if (inputString == null) {
       return false;
@@ -22,6 +23,7 @@ class _LoginDemoState extends State<LoginDemo> {
         .hasMatch(inputString);
   }
 
+  var dataToInsertInToExcel = {'name': '', 'email': ''};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +40,10 @@ class _LoginDemoState extends State<LoginDemo> {
                 Padding(
                   // padding: const EdgeInsets.only(
                   // left: 15.0, right: 15.0, top: 0, bottom: 0),
+
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   child: TextFormField(
+                    controller: nameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Name',
@@ -81,9 +85,20 @@ class _LoginDemoState extends State<LoginDemo> {
 
                         if (emailController.text != null &&
                             EmailValidator.validate(emailController.text)) {
+                          //email is valid now upload data to excel
+
+                          dataToInsertInToExcel['name'] =
+                              nameController.text.toString();
+
+                          dataToInsertInToExcel['email'] =
+                              emailController.text.toString();
+
+                          sendData() async {
+                            gsheet.insertDataToExcel(dataToInsertInToExcel);
+                          }
+
+                          sendData();
                           Navigator.pushNamed(context, '/levels');
-                          // Get.toNamed("/levels");
-                          // Navigator.push(context, "/testpage");
                           print("in");
                         } else {
                           ScaffoldMessenger.of(context)
@@ -94,7 +109,7 @@ class _LoginDemoState extends State<LoginDemo> {
                         }
                       },
                       child: Text(
-                        'Start the Game!',
+                        'Login',
                         style: TextStyle(color: Colors.white, fontSize: 25),
                       ),
                     ),

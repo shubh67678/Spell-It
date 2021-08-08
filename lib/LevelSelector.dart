@@ -63,6 +63,8 @@ class StackDemo extends StatelessWidget {
           LevelCard(6),
           LevelCard(7),
           LevelCard(8),
+          LevelCard(9),
+          LevelCard(10),
         ])),
       ),
     );
@@ -116,7 +118,7 @@ class LevelCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        "Level " + level_number.toString(),
+                        "Class " + level_number.toString(),
                         style: Theme.of(context).textTheme.headline5,
                       ),
                     ],

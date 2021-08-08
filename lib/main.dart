@@ -11,6 +11,8 @@ import 'loadJsonData.dart';
 import 'LevelSelector.dart';
 import 'package:flutter_svg/svg.dart';
 import 'Login.dart';
+import 'gsheetAPI.dart' as gsheet;
+import 'welcome_screen.dart';
 
 var words = [];
 var answers = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
@@ -34,13 +36,37 @@ class MyApp extends StatelessWidget {
         // home: ScoreBoard(),
         // home: MyHomePage(title: 'Dictation App'),
         // home: LevelSelector(),
-        home: StackDemo(),
+        // home: PushDataToSheets(),
+        home: WelcomeScreen(),
+        // home: LoginDemo(),
         routes: {
           '/dictation-test': (_) => MyHomePage(title: 'title'),
           '/login': (_) => LoginDemo(),
           '/score': (_) => ScoreBoard(),
           '/levels': (_) => StackDemo(),
         });
+  }
+}
+
+class PushDataToSheets extends StatelessWidget {
+  const PushDataToSheets({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Login Page"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            gsheet.insertDataToExcel({'name': 'a', 'email': 'asd@ad.com'});
+          },
+          child: Text("show Score"),
+        ),
+      ),
+    );
   }
 }
 
@@ -77,7 +103,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
+          // SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
           Column(
             children: [
               Spacer(flex: 3),
@@ -272,7 +298,7 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
                   });
                 }),
           ),
-          Text(wordAnswer),
+          // Text(wordAnswer),
         ],
       ),
     );
@@ -297,6 +323,9 @@ class SpeakTheWordButton extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
+              print("");
+              print(this.wordToSpeak);
+              print("");
               speak(this.wordToSpeak);
             },
             child: Text(
@@ -313,7 +342,7 @@ class SpeakTheWordButton extends StatelessWidget {
                   MaterialStateProperty.all(Colors.blue), // <-- Button color
             ),
           ),
-          Text(this.wordToSpeak),
+          // Text(this.wordToSpeak),
         ],
       ),
     );
