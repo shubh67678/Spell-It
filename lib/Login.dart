@@ -1,84 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'LevelSelector.dart';
 import 'main.dart';
 import 'gsheetAPI.dart' as gsheet;
 // import 'package:get/get.dart';
+import 'constants.dart';
 
-class LoginDemo extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _LoginDemoState createState() => _LoginDemoState();
+  _LoginState createState() => _LoginState();
 }
 
-class _LoginDemoState extends State<LoginDemo> {
+class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final nameController = TextEditingController();
-  bool isValidEmail(var inputString) {
-    if (inputString == null) {
-      return false;
-    }
-    return RegExp(
-            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(inputString);
-  }
 
   var dataToInsertInToExcel = {'name': '', 'email': ''};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Login Page"),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Padding(
-                  // padding: const EdgeInsets.only(
-                  // left: 15.0, right: 15.0, top: 0, bottom: 0),
-
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Name',
-                      hintText: 'Enter your full name',
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                    autofillHints: [AutofillHints.email],
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Spacer(flex: 4), //2/6
+                  Text(
+                    "Let's Learn!",
+                    style: Theme.of(context).textTheme.headline4?.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15.0, right: 15.0, top: 15, bottom: 0),
-                  //padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: TextFormField(
-                    controller: emailController,
-                    // validator: (email) =>
-
-                    //         ? 'Enter a valid email'
-                    //         : null,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      hintText: 'Enter your emailId',
-                      prefixIcon: Icon(Icons.mail),
-                    ),
+                  Text(
+                    "Please Login",
+                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                        color: Colors.white60, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 50,
-                    width: 250,
+                  Spacer(flex: 1), //2/6
+
+                  NameInputForm(nameController: nameController),
+                  Container(
+                    height: 16,
+                  ),
+                  EmailInputForm(emailController: emailController),
+                  Spacer(flex: 1),
+                  Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20)),
+                      gradient: kPrimaryGradient,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
                     child: TextButton(
                       onPressed: () {
                         print("test");
@@ -109,16 +87,169 @@ class _LoginDemoState extends State<LoginDemo> {
                         }
                       },
                       child: Text(
-                        'Login',
-                        style: TextStyle(color: Colors.white, fontSize: 25),
+                        'Lets Start!',
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            ?.copyWith(color: Colors.black),
                       ),
                     ),
                   ),
-                ),
-              ],
+
+                  Spacer(flex: 3), // it will take 2/6 spaces
+                ],
+              ),
             ),
           ),
+        ],
+      ),
+    );
+
+    // return Scaffold(
+    //   backgroundColor: Colors.white,
+    //   appBar: AppBar(
+    //     title: Text("Login Page"),
+    //   ),
+    //   body: Center(
+    //     child: SingleChildScrollView(
+    //       child: Center(
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //           children: <Widget>[
+    //             NameInputForm(nameController: nameController),
+    //             EmailInputForm(emailController: emailController),
+    //             Padding(
+    //               padding: const EdgeInsets.all(10.0),
+    //               child: Container(
+    //                 height: 50,
+    //                 width: 250,
+    //                 decoration: BoxDecoration(
+    //                     color: Colors.blue,
+    //                     borderRadius: BorderRadius.circular(20)),
+    //                 child: TextButton(
+    //                   onPressed: () {
+    //                     print("test");
+
+    //                     if (emailController.text != null &&
+    //                         EmailValidator.validate(emailController.text)) {
+    //                       //email is valid now upload data to excel
+
+    //                       dataToInsertInToExcel['name'] =
+    //                           nameController.text.toString();
+
+    //                       dataToInsertInToExcel['email'] =
+    //                           emailController.text.toString();
+
+    //                       sendData() async {
+    //                         gsheet.insertDataToExcel(dataToInsertInToExcel);
+    //                       }
+
+    //                       sendData();
+    //                       Navigator.pushNamed(context, '/levels');
+    //                       print("in");
+    //                     } else {
+    //                       ScaffoldMessenger.of(context)
+    //                         ..removeCurrentSnackBar()
+    //                         ..showSnackBar(SnackBar(
+    //                           content: Text('Please enter a valid email'),
+    //                         ));
+    //                     }
+    //                   },
+    //                   child: Text(
+    //                     'Login',
+    //                     style: TextStyle(color: Colors.white, fontSize: 25),
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //             InkWell(
+    //               child: Container(
+    //                 width: double.infinity,
+    //                 alignment: Alignment.center,
+    //                 padding: EdgeInsets.all(kDefaultPadding * 0.75), // 15
+    //                 decoration: BoxDecoration(
+    //                   gradient: kPrimaryGradient,
+    //                   borderRadius: BorderRadius.all(Radius.circular(12)),
+    //                 ),
+    //                 child: Text(
+    //                   "Lets Start Quiz",
+    //                   style: Theme.of(context)
+    //                       .textTheme
+    //                       .button
+    //                       ?.copyWith(color: Colors.black),
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
+  }
+}
+
+class NameInputForm extends StatelessWidget {
+  const NameInputForm({
+    Key? key,
+    required this.nameController,
+  }) : super(key: key);
+
+  final TextEditingController nameController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      style: TextStyle(color: Colors.white),
+      controller: nameController,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Color(0xFF1C2341),
+        hintText: "Full Name",
+        hintStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
+        labelText: 'Full Name',
+        labelStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
+        prefixIcon: Icon(
+          Icons.person,
+          color: Colors.white30,
+        ),
+      ),
+      autofillHints: [AutofillHints.email],
+    );
+  }
+}
+
+class EmailInputForm extends StatelessWidget {
+  const EmailInputForm({
+    Key? key,
+    required this.emailController,
+  }) : super(key: key);
+
+  final TextEditingController emailController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      style: TextStyle(color: Colors.white),
+      controller: emailController,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Color(0xFF1C2341),
+        hintText: 'Enter your emailId',
+        hintStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+        labelText: 'Email',
+        labelStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
+        prefixIcon: Icon(
+          Icons.mail,
+          color: Colors.white30,
+        ),
+        // border: OutlineInputBorder(),
       ),
     );
   }

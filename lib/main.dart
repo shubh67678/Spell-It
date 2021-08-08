@@ -3,13 +3,8 @@ import 'dart:async';
 import 'constants.dart';
 
 import 'package:flutter/material.dart';
-import 'not_used/test_to_voice.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert';
-import 'loadJsonData.dart';
 import 'LevelSelector.dart';
-import 'package:flutter_svg/svg.dart';
 import 'Login.dart';
 import 'gsheetAPI.dart' as gsheet;
 import 'welcome_screen.dart';
@@ -37,11 +32,11 @@ class MyApp extends StatelessWidget {
         // home: MyHomePage(title: 'Dictation App'),
         // home: LevelSelector(),
         // home: PushDataToSheets(),
-        home: WelcomeScreen(),
-        // home: LoginDemo(),
+        // home: WelcomeScreen(),
+        home: Login(),
         routes: {
           '/dictation-test': (_) => MyHomePage(title: 'title'),
-          '/login': (_) => LoginDemo(),
+          '/login': (_) => Login(),
           '/score': (_) => ScoreBoard(),
           '/levels': (_) => StackDemo(),
         });

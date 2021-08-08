@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:myapp/Login.dart';
 // import 'package:get/get.dart';
 import 'constants.dart';
+import 'Login.dart';
 // import 'package:quiz_app/screens/quiz/quiz_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -24,11 +26,12 @@ class WelcomeScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline4?.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
+
                   Spacer(), // 1/6
                   TextField(
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: kSecondaryColor,
+                      fillColor: Color(0xFF1C2341),
                       hintText: "Full Name",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
