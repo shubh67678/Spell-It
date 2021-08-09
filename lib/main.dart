@@ -251,107 +251,154 @@ class _MyHomePageState extends State<MyHomePage> {
     controlerOfTheAnsField.text = answers[_counter % modOperator];
   }
 
+  var wordNum = _counter + 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         // Fluttter show the back button automatically
+        iconTheme:
+            IconThemeData(color: Colors.white54), //change your color here
         backgroundColor: Colors.transparent,
+        title: Text(""),
         elevation: 0,
-        actions: [
-          Container(
-            height: 20,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              gradient: kSecondaryGradient,
-              // color: Color(0xFF1C2242),
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            child: TextButton(
-                onPressed: () {
-                  incrementCounter();
-                  calculateScore();
-                  Navigator.pushNamed(context, '/score');
-                  print("ended");
-                },
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    color: Colors.black87,
-                  ),
-                )),
-          ),
-        ],
+        actions: [],
       ),
 
       body: Stack(fit: StackFit.expand, children: [
         SvgPicture.asset("asset/images/bg_light.svg", fit: BoxFit.fill),
         SafeArea(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-              LoopOverWords2(_counter),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    width: 100,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        // gradient: kSecondaryGradient,
-                        color: Color(0xFF1C2242),
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        boxShadow: [
-                          new BoxShadow(
-                            offset: const Offset(
-                              2.0,
-                              2.0,
-                            ),
-                            color: Colors.black45,
-                            blurRadius: 20.0,
-                          ),
-                        ]),
-                    child: TextButton(
-                      onPressed: decrementCounter,
-                      child: Icon(Icons.arrow_back, color: Colors.white),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        // gradient: kSecondaryGradient,
-                        color: Color(0xFF1C2242),
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        boxShadow: [
-                          new BoxShadow(
-                            offset: const Offset(
-                              2.0,
-                              2.0,
-                            ),
-                            color: Colors.black45,
-                            blurRadius: 20.0,
-                          ),
-                        ]),
-                    child: TextButton(
-                      onPressed: incrementCounter,
-                      child: Icon(Icons.arrow_forward, color: Colors.white),
-                    ),
-                  ),
-                ],
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Center(
+              child: Text(
+                "Word: ${_counter + 1}",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline3
+                    ?.copyWith(color: kSecondaryColor),
               ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     incrementCounter();
-              //     calculateScore();
-              //     // ResetDataOfApp();
-              //     Navigator.pushNamed(context, '/score');
-              //     print("ended");
-              //   },
-              //   child: Text("end"),
-              // ),
-            ]))
+            ),
+            Spacer(),
+            LoopOverWords2(_counter),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 130,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      // gradient: kSecondaryGradient,
+                      color: Color(0xFF1C2242),
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      boxShadow: [
+                        new BoxShadow(
+                          offset: const Offset(
+                            2.0,
+                            2.0,
+                          ),
+                          color: Colors.black45,
+                          blurRadius: 20.0,
+                        ),
+                      ]),
+                  child: TextButton(
+                      onPressed: decrementCounter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          Text(
+                            "Back",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                            ),
+                          )
+                        ],
+                      )),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: 130,
+                  decoration: BoxDecoration(
+                      // gradient: kSecondaryGradient,
+                      color: Color(0xFF1C2242),
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      boxShadow: [
+                        new BoxShadow(
+                          offset: const Offset(
+                            2.0,
+                            2.0,
+                          ),
+                          color: Colors.black45,
+                          blurRadius: 20.0,
+                        ),
+                      ]),
+                  child: TextButton(
+                    onPressed: incrementCounter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Next",
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 300,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    gradient: kSecondaryGradient,
+                    // color: Color(0xFF1C2242),
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                  child: TextButton(
+                      onPressed: () {
+                        incrementCounter();
+                        calculateScore();
+                        Navigator.pushNamed(context, '/score');
+                        print("ended");
+                      },
+                      child: Text(
+                        "End Session",
+                        style: TextStyle(
+                          color: Colors.black87,
+                        ),
+                      )),
+                )
+              ],
+            ),
+            Spacer(),
+          ]),
+        ))
       ]),
 
       // This trailing comma makes auto-formatting nicer for build methods.
@@ -413,12 +460,16 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Color(0xFF1C2341),
-                  hintText: "Type your answer here",
+                  // fillColor: Color(),
                   hintStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
-                  border: OutlineInputBorder(
+
+                  enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12)),
+                    borderSide:
+                        BorderSide(color: Color(0xFF00CBC6), width: 1.5),
                   ),
-                  labelText: 'Answer',
+
+                  labelText: 'Type your answer here',
                   labelStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
                   prefixIcon: Icon(
                     Icons.question_answer,
@@ -442,8 +493,6 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
                   });
                 }),
           ),
-
-          // Text(wordAnswer),
         ],
       ),
     );
@@ -476,7 +525,7 @@ class SpeakTheWordButton extends StatelessWidget {
             child: Opacity(
               opacity: 0.9,
               child: const Text(
-                "Speak",
+                "Dictate",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30,

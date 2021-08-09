@@ -22,7 +22,6 @@ class LevelSelector extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Select level")),
       body: Center(
         child: Card(
           child: InkWell(
@@ -46,6 +45,8 @@ SetAnwerWrtLevel(String level) async {
   var totalJson = await getTheJsonData();
   main.words =
       totalJson[level].cast<String>(); // convert list dynamic to list string
+  main.words.shuffle();
+  main.words.shuffle();
   // print(main.words);
 }
 
@@ -53,7 +54,29 @@ class StackDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blueAccent,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          title: Text(
+            "Select Level",
+            style: Theme.of(context)
+                .textTheme
+                .headline5
+                ?.copyWith(color: Colors.white),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            Container(
+              height: 20,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                gradient: kSecondaryGradient,
+                // color: Color(0xFF1C2242),
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+            ),
+          ],
+        ),
         body: Stack(
           fit: StackFit.expand,
           children: [
@@ -125,7 +148,7 @@ class LevelCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        "Class " + level_number.toString(),
+                        "Level " + level_number.toString(),
                         style: Theme.of(context)
                             .textTheme
                             .headline5

@@ -33,12 +33,12 @@ class _LoginState extends State<Login> {
                 children: [
                   Spacer(flex: 4), //2/6
                   Text(
-                    "Let's Learn!",
+                    "Dictation time!",
                     style: Theme.of(context).textTheme.headline4?.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Please Login",
+                    "Enter information",
                     style: Theme.of(context).textTheme.bodyText1?.copyWith(
                         color: Colors.white60, fontWeight: FontWeight.bold),
                   ),
@@ -217,7 +217,6 @@ class NameInputForm extends StatelessWidget {
           color: Colors.white30,
         ),
       ),
-      autofillHints: [AutofillHints.email],
     );
   }
 }
@@ -251,6 +250,7 @@ class EmailInputForm extends StatelessWidget {
         ),
         // border: OutlineInputBorder(),
       ),
+      autofillHints: [AutofillHints.email],
     );
   }
 }
