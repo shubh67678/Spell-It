@@ -1,13 +1,10 @@
-import 'dart:async';
-
-import 'constants.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_svg/svg.dart';
+
 import 'LevelSelector.dart';
+import 'constants.dart';
 import 'Login.dart';
-import 'gsheetAPI.dart' as gsheet;
-import 'welcome_screen.dart';
 
 var words = [];
 var answers = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
@@ -46,17 +43,61 @@ class MyApp extends StatelessWidget {
 
 class ScorePage extends StatelessWidget {
   ScorePage({Key? key}) : super(key: key);
-  final items = List.generate(20, (counter) => 'Item: $counter');
+  Color getTheRightColor(userAnswer, trueAnswer) {
+    // if (index == qnController.correctAns) {
+    //   return kGreenColor;
+    // } else if (index == qnController.selectedAns &&
+    //     qnController.selectedAns != qnController.correctAns) {
+    //   return kRedColor;
+    // }
+    return userAnswer == trueAnswer ? kGreenColor : kRedColor;
+  }
 
-  Widget buildVerticalListView() => ListView.separated(
-        separatorBuilder: (context, index) => Divider(color: Colors.black),
+  Icon getTheRightIcon(userAnswer, trueAnswer) {
+    return userAnswer == trueAnswer
+        ? Icon(Icons.done, size: 16)
+        : Icon(Icons.close, size: 16);
+  }
+
+  Widget buildVerticalListView() => ListView.builder(
         itemCount: _counter,
         itemBuilder: (context, index) {
-          final item = answers[index];
-
-          return ListTile(
-            title: Text(item),
-            subtitle: item == words[index] ? Text("correct") : Text("wrong"),
+          final userAnswer = answers[index] == "" ? "--" : answers[index];
+          final TrueAnswer = words[index];
+          getTheRightColor(userAnswer, TrueAnswer);
+          return Container(
+            margin: EdgeInsets.only(top: kDefaultPadding),
+            padding: EdgeInsets.all(kDefaultPadding),
+            decoration: BoxDecoration(
+              border:
+                  Border.all(color: getTheRightColor(userAnswer, TrueAnswer)),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    text: userAnswer.toString(),
+                    style: Theme.of(context).textTheme.headline5?.copyWith(
+                        color: getTheRightColor(userAnswer, TrueAnswer)),
+                  ),
+                ),
+                Container(
+                  height: 26,
+                  width: 26,
+                  decoration: BoxDecoration(
+                    color: getTheRightColor(userAnswer, TrueAnswer),
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all(
+                        color: getTheRightColor(userAnswer, TrueAnswer)),
+                  ),
+                  child: getTheRightColor(userAnswer, TrueAnswer) == kGrayColor
+                      ? null
+                      : getTheRightIcon(userAnswer, TrueAnswer),
+                )
+              ],
+            ),
           );
         },
       );
@@ -66,10 +107,10 @@ class ScorePage extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
+          SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
           Column(
             children: [
-              Spacer(flex: 1),
+              Spacer(flex: 2),
               Text(
                 "Score",
                 style: Theme.of(context)
@@ -87,24 +128,62 @@ class ScorePage extends StatelessWidget {
                       ?.copyWith(color: kSecondaryColor),
                 ),
               ),
+              Spacer(),
+              // Container(
+              //   height: 50,
+              //   width: 120,
+              //   decoration: BoxDecoration(
+              //       color: Colors.blue,
+              //       borderRadius: BorderRadius.circular(20)),
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       ResetDataOfApp();
+              //       Navigator.pushNamed(context, '/levels');
+              //     },
+              //     child: Icon(Icons.arrow_back),
+              //   ),
+              // ),
               Spacer(flex: 1),
-              Center(
-                  child:
-                      Container(height: 333, child: buildVerticalListView())),
 
+// decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(25),
+//       ),
+
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
+                padding: EdgeInsets.all(kDefaultPadding),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: kDefaultPadding / 2),
+                    Container(height: 230, child: buildVerticalListView())
+                  ],
+                ),
+              ),
               Spacer(),
               Container(
-                height: 50,
-                width: 120,
+                width: 300,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20)),
-                child: ElevatedButton(
+                  gradient: kPrimaryGradient,
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                ),
+                child: TextButton(
                   onPressed: () {
                     ResetDataOfApp();
                     Navigator.pushNamed(context, '/levels');
                   },
-                  child: Icon(Icons.arrow_back),
+                  child: Text(
+                    'Main menu',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        ?.copyWith(color: Colors.black),
+                  ),
                 ),
               ),
               Spacer(),
@@ -144,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
       answers[i].toLowerCase();
       answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
       // print(answers[i]);
-      print(words[i]);
+      // print(words[i]);
       if (answers[i] == words[i]) {
         setState(() {
           score++;
@@ -180,6 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
+
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         LoopOverWords2(_counter),
         Row(
@@ -271,9 +351,20 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
             child: TextField(
                 controller: controlerOfTheAnsField,
                 keyboardType: TextInputType.visiblePassword,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Type your answer here',
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xFF1C2341),
+                  hintText: "Type your answer here",
+                  hintStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                  labelText: 'Answer',
+                  labelStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
+                  prefixIcon: Icon(
+                    Icons.question_answer,
+                    color: Colors.white30,
+                  ),
                 ),
                 //     decoration: const InputDecoration(
                 //       border: OutlineInputBorder(),
@@ -287,11 +378,12 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
                       answers.add("");
                     }
                     answers[widget.wordIndex] = str;
-                    print(answers);
-                    print(controlerOfTheAnsField.text);
+                    // print(answers);
+                    // print(controlerOfTheAnsField.text);
                   });
                 }),
           ),
+
           // Text(wordAnswer),
         ],
       ),
