@@ -260,21 +260,33 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          TextButton(
-              onPressed: () {
-                print("in");
-              },
-              child: Text(
-                "end",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              )),
+          Container(
+            height: 20,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              gradient: kSecondaryGradient,
+              // color: Color(0xFF1C2242),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+            child: TextButton(
+                onPressed: () {
+                  incrementCounter();
+                  calculateScore();
+                  Navigator.pushNamed(context, '/score');
+                  print("ended");
+                },
+                child: Text(
+                  "End",
+                  style: TextStyle(
+                    color: Colors.black87,
+                  ),
+                )),
+          ),
         ],
       ),
 
       body: Stack(fit: StackFit.expand, children: [
-        SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
+        SvgPicture.asset("asset/images/bg_light.svg", fit: BoxFit.fill),
         SafeArea(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -284,39 +296,61 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    height: 50,
-                    width: 120,
+                    width: 100,
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: ElevatedButton(
+                        // gradient: kSecondaryGradient,
+                        color: Color(0xFF1C2242),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        boxShadow: [
+                          new BoxShadow(
+                            offset: const Offset(
+                              2.0,
+                              2.0,
+                            ),
+                            color: Colors.black45,
+                            blurRadius: 20.0,
+                          ),
+                        ]),
+                    child: TextButton(
                       onPressed: decrementCounter,
-                      child: Icon(Icons.arrow_back),
+                      child: Icon(Icons.arrow_back, color: Colors.white),
                     ),
                   ),
                   Container(
-                    height: 50,
-                    width: 120,
+                    alignment: Alignment.center,
+                    width: 100,
                     decoration: BoxDecoration(
-                        color: Color(0xFF46A0AE),
-                        borderRadius: BorderRadius.circular(20)),
-                    child: ElevatedButton(
+                        // gradient: kSecondaryGradient,
+                        color: Color(0xFF1C2242),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        boxShadow: [
+                          new BoxShadow(
+                            offset: const Offset(
+                              2.0,
+                              2.0,
+                            ),
+                            color: Colors.black45,
+                            blurRadius: 20.0,
+                          ),
+                        ]),
+                    child: TextButton(
                       onPressed: incrementCounter,
-                      child: Icon(Icons.arrow_forward),
+                      child: Icon(Icons.arrow_forward, color: Colors.white),
                     ),
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  incrementCounter();
-                  calculateScore();
-                  // ResetDataOfApp();
-                  Navigator.pushNamed(context, '/score');
-                  print("ended");
-                },
-                child: Text("end"),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     incrementCounter();
+              //     calculateScore();
+              //     // ResetDataOfApp();
+              //     Navigator.pushNamed(context, '/score');
+              //     print("ended");
+              //   },
+              //   child: Text("end"),
+              // ),
             ]))
       ]),
 
@@ -344,6 +378,9 @@ class LoopOverWords2 extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         SpeakTheWordButton(getWord()),
+        Container(
+          height: 10,
+        ),
         GetUserAnswerForWord(this.wordIndex % modOperator),
       ],
     );
@@ -370,6 +407,7 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: TextField(
+                style: TextStyle(color: Colors.white),
                 controller: controlerOfTheAnsField,
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(
@@ -435,11 +473,14 @@ class SpeakTheWordButton extends StatelessWidget {
               print("");
               speak(this.wordToSpeak);
             },
-            child: Text(
-              "Speak",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 30,
+            child: Opacity(
+              opacity: 0.9,
+              child: const Text(
+                "Speak",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                ),
               ),
             ),
             style: ButtonStyle(
@@ -448,8 +489,6 @@ class SpeakTheWordButton extends StatelessWidget {
               backgroundColor: MaterialStateProperty.all(Color(0xFF1C2341)),
             ),
           ),
-
-          // Text(this.wordToSpeak),
         ],
       ),
     );
