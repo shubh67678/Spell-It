@@ -28,70 +28,38 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        // home: ScoreBoard(),
+        home: ScorePage(),
         // home: MyHomePage(title: 'Dictation App'),
         // home: LevelSelector(),
         // home: PushDataToSheets(),
         // home: WelcomeScreen(),
-        home: Login(),
+        // home: Login(),
+        // home: TestList(),
         routes: {
           '/dictation-test': (_) => MyHomePage(title: 'title'),
           '/login': (_) => Login(),
-          '/score': (_) => ScoreBoard(),
+          '/score': (_) => ScorePage(),
           '/levels': (_) => StackDemo(),
         });
   }
 }
 
-class PushDataToSheets extends StatelessWidget {
-  const PushDataToSheets({Key? key}) : super(key: key);
+class ScorePage extends StatelessWidget {
+  ScorePage({Key? key}) : super(key: key);
+  final items = List.generate(20, (counter) => 'Item: $counter');
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Login Page"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            gsheet.insertDataToExcel({'name': 'a', 'email': 'asd@ad.com'});
-          },
-          child: Text("show Score"),
-        ),
-      ),
-    );
-  }
-}
+  Widget buildVerticalListView() => ListView.separated(
+        separatorBuilder: (context, index) => Divider(color: Colors.black),
+        itemCount: _counter,
+        itemBuilder: (context, index) {
+          final item = answers[index];
 
-class ScoreBoard extends StatefulWidget {
-  ScoreBoard({Key? key}) : super(key: key);
-
-  @override
-  _ScoreBoardState createState() => _ScoreBoardState();
-}
-
-class _ScoreBoardState extends State<ScoreBoard> {
-  calculateScore() {
-    score = 0;
-    var length_words = _counter;
-    if (length_words < score) {
-      length_words = _counter;
-    }
-    for (int i = 0; i < length_words + 1; i++) {
-      answers[i].toLowerCase();
-      answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
-      print(answers[i]);
-      print(words[i]);
-      if (answers[i] == words[i]) {
-        setState(() {
-          score++;
-        });
-      }
-    }
-  }
-
+          return ListTile(
+            title: Text(item),
+            subtitle: item == words[index] ? Text("correct") : Text("wrong"),
+          );
+        },
+      );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +69,7 @@ class _ScoreBoardState extends State<ScoreBoard> {
           // SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
           Column(
             children: [
-              Spacer(flex: 3),
+              Spacer(flex: 1),
               Text(
                 "Score",
                 style: Theme.of(context)
@@ -109,15 +77,22 @@ class _ScoreBoardState extends State<ScoreBoard> {
                     .headline3
                     ?.copyWith(color: kSecondaryColor),
               ),
-              Spacer(),
-              Text(
-                "${score}/${_counter + 1}",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4
-                    ?.copyWith(color: kSecondaryColor),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "${score}/${_counter}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline4
+                      ?.copyWith(color: kSecondaryColor),
+                ),
               ),
-              Spacer(flex: 3),
+              Spacer(flex: 1),
+              Center(
+                  child:
+                      Container(height: 333, child: buildVerticalListView())),
+
+              Spacer(),
               Container(
                 height: 50,
                 width: 120,
@@ -132,8 +107,8 @@ class _ScoreBoardState extends State<ScoreBoard> {
                   child: Icon(Icons.arrow_back),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: calculateScore, child: Text("show Score"))
+              Spacer(),
+              // buildVerticalListView(),
             ],
           )
         ],
@@ -159,6 +134,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var modOperator = words.length;
+  calculateScore() {
+    score = 0;
+    var length_words = _counter;
+    if (length_words < score) {
+      length_words = _counter;
+    }
+    for (int i = 0; i < length_words + 1; i++) {
+      answers[i].toLowerCase();
+      answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
+      // print(answers[i]);
+      print(words[i]);
+      if (answers[i] == words[i]) {
+        setState(() {
+          score++;
+        });
+      }
+    }
+  }
 
   // int score = 0;
 
@@ -166,15 +159,18 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
-    print(controlerOfTheAnsField.text);
+    // print(controlerOfTheAnsField.text);
     controlerOfTheAnsField.clear();
   }
 
   decrementCounter() {
+    if (_counter == 0) {
+      return;
+    }
     setState(() {
       _counter--;
     });
-    print(controlerOfTheAnsField.text);
+    // print(controlerOfTheAnsField.text);
     controlerOfTheAnsField.text = answers[_counter % modOperator];
   }
 
@@ -213,6 +209,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () {
+            incrementCounter();
+            calculateScore();
+            // ResetDataOfApp();
             Navigator.pushNamed(context, '/score');
             print("ended");
           },
