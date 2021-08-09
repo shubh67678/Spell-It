@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'not_used/test_to_voice.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'constants.dart';
 import 'dart:convert';
+import 'package:flutter_svg/svg.dart';
 import 'loadJsonData.dart';
 import 'main.dart' as main;
 
@@ -51,23 +53,28 @@ class StackDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
-      body: SafeArea(
-        child: Center(
-            child: ListView(children: <Widget>[
-          LevelCard(1),
-          LevelCard(2),
-          LevelCard(3),
-          LevelCard(4),
-          LevelCard(5),
-          LevelCard(6),
-          LevelCard(7),
-          LevelCard(8),
-          LevelCard(9),
-          LevelCard(10),
-        ])),
-      ),
-    );
+        backgroundColor: Colors.blueAccent,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
+            SafeArea(
+              child: Center(
+                  child: ListView(children: <Widget>[
+                LevelCard(1),
+                LevelCard(2),
+                LevelCard(3),
+                LevelCard(4),
+                LevelCard(5),
+                LevelCard(6),
+                LevelCard(7),
+                LevelCard(8),
+                LevelCard(9),
+                LevelCard(10),
+              ])),
+            ),
+          ],
+        ));
   }
 }
 
@@ -91,12 +98,12 @@ class LevelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(16),
-      child: Card(
-        elevation: 12,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFF1C2242),
+          // gradient: kSlowerGradient,
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
-        color: Colors.white,
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
@@ -119,7 +126,10 @@ class LevelCard extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         "Class " + level_number.toString(),
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            ?.copyWith(color: Colors.white),
                       ),
                     ],
                   ),
@@ -127,6 +137,7 @@ class LevelCard extends StatelessWidget {
                 Icon(
                   Icons.navigate_next,
                   size: 36,
+                  color: Colors.white70,
                 )
               ],
             ),

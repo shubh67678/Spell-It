@@ -25,12 +25,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: ScorePage(),
+        // home: ScorePage(),
         // home: MyHomePage(title: 'Dictation App'),
         // home: LevelSelector(),
         // home: PushDataToSheets(),
         // home: WelcomeScreen(),
-        // home: Login(),
+        home: Login(),
         // home: TestList(),
         routes: {
           '/dictation-test': (_) => MyHomePage(title: 'title'),
@@ -232,8 +232,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // int score = 0;
-
   incrementCounter() {
     setState(() {
       _counter++;
@@ -256,47 +254,70 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(widget.title),
+        // Fluttter show the back button automatically
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          TextButton(
+              onPressed: () {
+                print("in");
+              },
+              child: Text(
+                "end",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              )),
+        ],
       ),
 
-      body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        LoopOverWords2(_counter),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              height: 50,
-              width: 120,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: ElevatedButton(
-                onPressed: decrementCounter,
-                child: Icon(Icons.arrow_back),
+      body: Stack(fit: StackFit.expand, children: [
+        SvgPicture.asset("asset/images/bg.svg", fit: BoxFit.fill),
+        SafeArea(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+              LoopOverWords2(_counter),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    height: 50,
+                    width: 120,
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: ElevatedButton(
+                      onPressed: decrementCounter,
+                      child: Icon(Icons.arrow_back),
+                    ),
+                  ),
+                  Container(
+                    height: 50,
+                    width: 120,
+                    decoration: BoxDecoration(
+                        color: Color(0xFF46A0AE),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: ElevatedButton(
+                      onPressed: incrementCounter,
+                      child: Icon(Icons.arrow_forward),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Container(
-              height: 50,
-              width: 120,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: ElevatedButton(
-                onPressed: incrementCounter,
-                child: Icon(Icons.arrow_forward),
+              ElevatedButton(
+                onPressed: () {
+                  incrementCounter();
+                  calculateScore();
+                  // ResetDataOfApp();
+                  Navigator.pushNamed(context, '/score');
+                  print("ended");
+                },
+                child: Text("end"),
               ),
-            ),
-          ],
-        ),
-        ElevatedButton(
-          onPressed: () {
-            incrementCounter();
-            calculateScore();
-            // ResetDataOfApp();
-            Navigator.pushNamed(context, '/score');
-            print("ended");
-          },
-          child: Text("end"),
-        ),
+            ]))
       ]),
 
       // This trailing comma makes auto-formatting nicer for build methods.
@@ -424,10 +445,10 @@ class SpeakTheWordButton extends StatelessWidget {
             style: ButtonStyle(
               shape: MaterialStateProperty.all(CircleBorder()),
               padding: MaterialStateProperty.all(EdgeInsets.all(50)),
-              backgroundColor:
-                  MaterialStateProperty.all(Colors.blue), // <-- Button color
+              backgroundColor: MaterialStateProperty.all(Color(0xFF1C2341)),
             ),
           ),
+
           // Text(this.wordToSpeak),
         ],
       ),
