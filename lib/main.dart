@@ -462,11 +462,13 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
                   fillColor: Color(0xFF1C2341),
                   // fillColor: Color(),
                   hintStyle: TextStyle(fontSize: 20.0, color: Colors.white24),
-
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                     borderSide:
-                        BorderSide(color: Color(0xFF00CBC6), width: 1.5),
+                        BorderSide(color: Color(0xFF00CBC6), width: 2.0),
                   ),
 
                   labelText: 'Type your answer here',
