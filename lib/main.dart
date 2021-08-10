@@ -44,12 +44,6 @@ class MyApp extends StatelessWidget {
 class ScorePage extends StatelessWidget {
   ScorePage({Key? key}) : super(key: key);
   Color getTheRightColor(userAnswer, trueAnswer) {
-    // if (index == qnController.correctAns) {
-    //   return kGreenColor;
-    // } else if (index == qnController.selectedAns &&
-    //     qnController.selectedAns != qnController.correctAns) {
-    //   return kRedColor;
-    // }
     return userAnswer == trueAnswer ? kGreenColor : kRedColor;
   }
 
@@ -146,26 +140,8 @@ class ScorePage extends StatelessWidget {
                 ),
               ),
               Spacer(),
-              // Container(
-              //   height: 50,
-              //   width: 120,
-              //   decoration: BoxDecoration(
-              //       color: Colors.blue,
-              //       borderRadius: BorderRadius.circular(20)),
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       ResetDataOfApp();
-              //       Navigator.pushNamed(context, '/levels');
-              //     },
-              //     child: Icon(Icons.arrow_back),
-              //   ),
-              // ),
-              Spacer(flex: 1),
 
-// decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(25),
-//       ),
+              Spacer(flex: 1),
 
               Container(
                 margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
@@ -175,8 +151,9 @@ class ScorePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: kDefaultPadding / 2),
+                    // SizedBox(height: kDefaultPadding / 2),
                     Container(height: 230, child: buildVerticalListView())
                   ],
                 ),
@@ -588,7 +565,6 @@ class SpeakTheWordButton extends StatelessWidget {
             onPressed: () {
               print("");
               print(this.wordToSpeak);
-              print("");
               speak(this.wordToSpeak);
             },
             child: Opacity(
