@@ -255,6 +255,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final FlutterTts flutterTts = FlutterTts();
+
+    speak(String to_speak) async {
+      await flutterTts.setVolume(1);
+      await flutterTts.speak(to_speak);
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -344,7 +351,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ]),
                   child: TextButton(
-                    onPressed: incrementCounter,
+                    onPressed: () {
+                      incrementCounter();
+                      speak(words[_counter]);
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -376,8 +386,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 300,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    gradient: kSecondaryGradient,
-                    // color: Color(0xFF1C2242),
+                    // gradient: kSecondaryGradient,
+                    color: Color(0xFF1C2242),
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                   child: TextButton(
@@ -390,7 +400,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(
                         "End Session",
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Colors.white70,
                         ),
                       )),
                 )
