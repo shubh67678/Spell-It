@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
                 children: [
                   Spacer(flex: 4), //2/6
                   Text(
-                    "Dictation time!",
+                    "Let's Learn!",
                     style: Theme.of(context).textTheme.headline4?.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
@@ -60,16 +60,19 @@ class _LoginState extends State<Login> {
                     child: TextButton(
                       onPressed: () {
                         print("test");
+                        String emailTextValue = emailController.text;
+                        emailTextValue.toString();
 
-                        if (emailController.text != null &&
-                            EmailValidator.validate(emailController.text)) {
+                        emailTextValue.replaceAll(new RegExp(r"\s+"), "");
+
+                        if (emailTextValue != null &&
+                            EmailValidator.validate(emailTextValue)) {
                           //email is valid now upload data to excel
 
                           dataToInsertInToExcel['name'] =
                               nameController.text.toString();
 
-                          dataToInsertInToExcel['email'] =
-                              emailController.text.toString();
+                          dataToInsertInToExcel['email'] = emailTextValue;
 
                           sendData() async {
                             gsheet.insertDataToExcel(dataToInsertInToExcel);

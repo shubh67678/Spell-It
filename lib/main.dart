@@ -76,12 +76,19 @@ class ScorePage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                RichText(
-                  text: TextSpan(
-                    text: userAnswer.toString(),
-                    style: Theme.of(context).textTheme.headline5?.copyWith(
-                        color: getTheRightColor(userAnswer, TrueAnswer)),
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start, //Cent
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: userAnswer.toString(),
+                        style: Theme.of(context).textTheme.headline5?.copyWith(
+                            color: getTheRightColor(userAnswer, TrueAnswer)),
+                      ),
+                    ),
+                    showCorrectAnswer(TrueAnswer, userAnswer),
+                  ],
                 ),
                 Container(
                   height: 26,
@@ -101,6 +108,16 @@ class ScorePage extends StatelessWidget {
           );
         },
       );
+
+  Padding showCorrectAnswer(TrueAnswer, String userAnswer) {
+    return TrueAnswer != userAnswer
+        ? Padding(
+            padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
+            child: TrueAnswer != userAnswer ? Text("$TrueAnswer") : Text(""),
+          )
+        : Padding(padding: const EdgeInsets.fromLTRB(0, 0, 0, 0));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,6 +260,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
       answers[i].toLowerCase();
       answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
+      words[i].toLowerCase();
+      words[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
+
       // print(answers[i]);
       // print(words[i]);
       if (answers[i] == words[i]) {
@@ -254,6 +274,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   incrementCounter() {
+    if (_counter == 9) {
+      calculateScore(_counter);
+      Navigator.pushNamed(context, '/score');
+      print("ended");
+    }
     setState(() {
       _counter++;
     });
@@ -300,142 +325,145 @@ class _MyHomePageState extends State<MyHomePage> {
         SafeArea(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Spacer(),
-            Center(
-              child: Text(
-                "Word: ${_counter + 1}",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline3
-                    ?.copyWith(color: kSecondaryColor),
+          child: Container(
+            constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Spacer(),
+              Center(
+                child: Text(
+                  "Word: ${_counter + 1} / 10",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline3
+                      ?.copyWith(color: kSecondaryColor),
+                ),
               ),
-            ),
-            Spacer(),
-            LoopOverWords2(_counter),
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  width: 130,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      // gradient: kSecondaryGradient,
-                      color: Color(0xFF1C2242),
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                      boxShadow: [
-                        new BoxShadow(
-                          offset: const Offset(
-                            2.0,
-                            2.0,
+              Spacer(),
+              LoopOverWords2(_counter),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: 130,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        // gradient: kSecondaryGradient,
+                        color: Color(0xFF1C2242),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        boxShadow: [
+                          new BoxShadow(
+                            offset: const Offset(
+                              2.0,
+                              2.0,
+                            ),
+                            color: Colors.black45,
+                            blurRadius: 20.0,
                           ),
-                          color: Colors.black45,
-                          blurRadius: 20.0,
-                        ),
-                      ]),
-                  child: TextButton(
-                      onPressed: decrementCounter,
+                        ]),
+                    child: TextButton(
+                        onPressed: decrementCounter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            Text(
+                              "Back",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                            )
+                          ],
+                        )),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 130,
+                    decoration: BoxDecoration(
+                        // gradient: kSecondaryGradient,
+                        color: Color(0xFF1C2242),
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        boxShadow: [
+                          new BoxShadow(
+                            offset: const Offset(
+                              2.0,
+                              2.0,
+                            ),
+                            color: Colors.black45,
+                            blurRadius: 20.0,
+                          ),
+                        ]),
+                    child: TextButton(
+                      onPressed: () {
+                        incrementCounter();
+                        if (answers.length <= _counter) {
+                          print("inasd");
+                          answers.add('');
+                        }
+                        speak(words[_counter]);
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          Text(
+                            "Next",
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          ),
                           Icon(
-                            Icons.arrow_back,
+                            Icons.arrow_forward,
                             color: Colors.white,
                             size: 20,
                           ),
-                          Text(
-                            "Back",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                            ),
-                          )
                         ],
-                      )),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  width: 130,
-                  decoration: BoxDecoration(
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: 15,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
                       // gradient: kSecondaryGradient,
                       color: Color(0xFF1C2242),
                       borderRadius: BorderRadius.all(Radius.circular(12)),
-                      boxShadow: [
-                        new BoxShadow(
-                          offset: const Offset(
-                            2.0,
-                            2.0,
-                          ),
-                          color: Colors.black45,
-                          blurRadius: 20.0,
-                        ),
-                      ]),
-                  child: TextButton(
-                    onPressed: () {
-                      incrementCounter();
-                      if (answers.length <= _counter) {
-                        print("inasd");
-                        answers.add('');
-                      }
-                      speak(words[_counter]);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Next",
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              height: 15,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    // gradient: kSecondaryGradient,
-                    color: Color(0xFF1C2242),
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                  ),
-                  child: SizedBox(
-                    width: 150,
-                    child: TextButton(
-                        onPressed: () {
-                          calculateScore(_counter);
-                          incrementCounter();
-                          Navigator.pushNamed(context, '/score');
-                          print("ended");
-                        },
-                        child: Text(
-                          "End Session",
-                          style: TextStyle(
-                            color: Colors.white70,
-                          ),
-                        )),
-                  ),
-                )
-              ],
-            ),
-            Spacer(),
-          ]),
+                    child: SizedBox(
+                      width: 150,
+                      child: TextButton(
+                          onPressed: () {
+                            calculateScore(_counter);
+                            incrementCounter();
+                            Navigator.pushNamed(context, '/score');
+                            print("ended");
+                          },
+                          child: Text(
+                            "End Session",
+                            style: TextStyle(
+                              color: Colors.white70,
+                            ),
+                          )),
+                    ),
+                  )
+                ],
+              ),
+              Spacer(),
+            ]),
+          ),
         ))
       ]),
 
@@ -543,7 +571,10 @@ class SpeakTheWordButton extends StatelessWidget {
   final FlutterTts flutterTts = FlutterTts();
 
   speak(String to_speak) async {
+    // print(await flutterTts.getVoices);
+
     await flutterTts.setVolume(1);
+    await flutterTts.setLanguage("en-US");
     await flutterTts.speak(to_speak);
   }
 
