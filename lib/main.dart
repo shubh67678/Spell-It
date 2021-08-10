@@ -7,7 +7,7 @@ import 'constants.dart';
 import 'Login.dart';
 
 var words = [];
-var answers = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+var answers = [''];
 int _counter = 0;
 var score = 0;
 final controlerOfTheAnsField = TextEditingController();
@@ -198,8 +198,7 @@ class ScorePage extends StatelessWidget {
 
 ResetDataOfApp() {
   words = [];
-  answers = [];
-  answers = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+  answers = [''];
   _counter = 0;
   score = 0;
 }
@@ -207,19 +206,41 @@ ResetDataOfApp() {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // NOTE: Calling this function here would crash the app.
+    speak(words[_counter]);
+  }
+
   var modOperator = words.length;
-  calculateScore() {
+  calculateScore(int num_question_answered) {
+    // if (num_question_answered == 0) {
+    //   _counter++;
+    //   print("asdasd");
+    //   setState(() {
+    //     score = 0;
+    //   });
+    //   return;
+    // }
+    print(num_question_answered);
+    print(answers);
     score = 0;
-    var length_words = _counter;
+    var length_words = num_question_answered;
     if (length_words < score) {
-      length_words = _counter;
+      length_words = num_question_answered;
     }
     for (int i = 0; i < length_words + 1; i++) {
+      if (answers.length >= i) {
+        print("overflow");
+      }
+
       answers[i].toLowerCase();
       answers[i].replaceAll(new RegExp(r"\s+"), ""); // remove all spaces
       // print(answers[i]);
@@ -253,26 +274,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var wordNum = _counter + 1;
 
+  final FlutterTts flutterTts = FlutterTts();
+
+  speak(String to_speak) async {
+    await flutterTts.setVolume(1);
+    await flutterTts.speak(to_speak);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final FlutterTts flutterTts = FlutterTts();
-
-    speak(String to_speak) async {
-      await flutterTts.setVolume(1);
-      await flutterTts.speak(to_speak);
-    }
-
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        // Fluttter show the back button automatically
-        iconTheme:
-            IconThemeData(color: Colors.white54), //change your color here
-        backgroundColor: Colors.transparent,
-        title: Text(""),
-        elevation: 0,
-        actions: [],
-      ),
+      // appBar: AppBar(
+      //   // Fluttter show the back button automatically
+      //   iconTheme:
+      //       IconThemeData(color: Colors.white54), //change your color here
+      //   backgroundColor: Colors.transparent,
+      //   title: Text(""),
+      //   elevation: 0,
+      //   actions: [],
+      // ),
 
       body: Stack(fit: StackFit.expand, children: [
         SvgPicture.asset("asset/images/bg_light.svg", fit: BoxFit.fill),
@@ -281,6 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Spacer(),
             Center(
               child: Text(
                 "Word: ${_counter + 1}",
@@ -353,6 +375,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: TextButton(
                     onPressed: () {
                       incrementCounter();
+                      if (answers.length <= _counter) {
+                        print("inasd");
+                        answers.add('');
+                      }
                       speak(words[_counter]);
                     },
                     child: Row(
@@ -383,26 +409,28 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: 300,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     // gradient: kSecondaryGradient,
                     color: Color(0xFF1C2242),
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
-                  child: TextButton(
-                      onPressed: () {
-                        incrementCounter();
-                        calculateScore();
-                        Navigator.pushNamed(context, '/score');
-                        print("ended");
-                      },
-                      child: Text(
-                        "End Session",
-                        style: TextStyle(
-                          color: Colors.white70,
-                        ),
-                      )),
+                  child: SizedBox(
+                    width: 150,
+                    child: TextButton(
+                        onPressed: () {
+                          calculateScore(_counter);
+                          incrementCounter();
+                          Navigator.pushNamed(context, '/score');
+                          print("ended");
+                        },
+                        child: Text(
+                          "End Session",
+                          style: TextStyle(
+                            color: Colors.white70,
+                          ),
+                        )),
+                  ),
                 )
               ],
             ),
@@ -496,9 +524,7 @@ class _GetUserAnswerForWordState extends State<GetUserAnswerForWord> {
                 onChanged: (String str) {
                   setState(() {
                     wordAnswer = str;
-                    if (answers.length < widget.wordIndex) {
-                      answers.add("");
-                    }
+
                     answers[widget.wordIndex] = str;
                     // print(answers);
                     // print(controlerOfTheAnsField.text);
