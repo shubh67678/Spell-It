@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 
 import 'LevelSelector.dart';
 import 'constants.dart';
-import 'Login.dart';
 
 var words = [];
 var answers = [''];
@@ -30,11 +29,10 @@ class MyApp extends StatelessWidget {
         // home: LevelSelector(),
         // home: PushDataToSheets(),
         // home: WelcomeScreen(),
-        home: Login(),
+        home: StackDemo(),
         // home: TestList(),
         routes: {
           '/dictation-test': (_) => MyHomePage(title: 'title'),
-          '/login': (_) => Login(),
           '/score': (_) => ScorePage(),
           '/levels': (_) => StackDemo(),
         });
