@@ -1,8 +1,0 @@
-{
-	"language": "en-us",
-	"index": 0,
-	"words": [
-        {"word": "cat", "answers": ["cat"]},
-		{"word": "turtle", "answers": ["turtle"]}
-    ]
-}
