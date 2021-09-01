@@ -5,18 +5,23 @@
 
 
 
----
+
 
 ## Description
 
 This APP helps users test their spellings. 
 
+## Features 
+- App dictates the word and the user types in the answer.
+- No auto-correct 
+- Get the score and see the mistakes 
+- Many level for different difficulty 
 
-##How to use this app?
+### How to use this app?
 ![Flow](https://github.com/shubh67678/SpellIt/blob/main/app_icons_images/chrome_5f4qqPxG2P.png)
-
-##ScreenShots
-
+---
+### Screen Shots
+![ss](https://github.com/shubh67678/SpellIt/blob/main/app_icons_images/chrome_ATglhSc48n.png)
 
 ### Technologies
 
@@ -25,5 +30,5 @@ This APP helps users test their spellings.
 
 ---
 
-
+For more details refer the [presentation](https://github.com/shubh67678/SpellIt/blob/main/PPT%20of%20the%20app.pdf)
 
